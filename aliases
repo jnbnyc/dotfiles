@@ -1,0 +1,124 @@
+
+# shortcuts to exit & reload zsh preferences
+  alias zshf="vim ~/.zshrc && source ~/.zshrc"
+  alias alsf="vim ~/.aliases && source ~/.aliases"
+  alias sshf="vim ~/.ssh/config"
+  alias hostsf="svi /etc/hosts"
+
+# shortcuts to exit & reload bash preferences
+if [ "$SHELL" = "/bin/bash" ]; then
+    alias bashrc="vim ~/.bash_profile && source ~/.bash_profile"
+    alias basha="vim ~/.bash_aliases && source ~/.bash_aliases"
+fi
+
+# handy shortcuts
+  alias ls='ls --color=auto'  ## Colorize the ls output ##
+  alias la='ls -altr'
+  alias ll='ls -la'  ## Use a long listing format ##
+  alias l.='ls -d .* --color=auto' ## Show hidden files ##
+  alias h='history'
+  alias c='clear'
+  alias rmd='rm -rf'
+  alias cpd='cp -rf'
+  alias mkdir='mkdir -pv'
+  alias ping='ping -c 5'  ## Stop after sending count ECHO_REQUEST packets ##
+  alias fastping='ping -c 100 -s.2'  ## Do not wait interval 1 second, go fast ##
+
+# Higher verbosity
+  alias mv='mv -i'
+  alias cp='cp -i'
+  alias ln='ln -i'
+  alias cwhich='command which'
+  alias vurl='curl -ILv'
+
+## Colorize the grep command output for ease of use (good for log files) ##
+# alias grep='grep --color=auto'
+# alias egrep='egrep --color=auto'
+# alias fgrep='fgrep --color=auto'
+
+# folder navigation
+  alias ..='cd ..'
+  alias ..2='cd ../../'
+  alias ..3='cd ../../../'
+  alias ..4='cd ../../../../'
+  alias ..5='cd ../../../../../'
+  alias ..6='cd ../../../../../../'
+  alias ..7='cd ../../../../../../../'
+ 
+# shortcuts to directories
+  alias cellar='cd /usr/local/Cellar'
+  alias caskroom='cd /opt/homebrew-cask/Caskroom'
+  alias ws='cd ~/workspace' 
+  alias gdrive='cd ~/GoogleDrive'
+
+# functions to directories
+  cd() { builtin cd "$@" && ls; }
+  scmg() { cd ~/workspace/git/$1 }
+  scms() { cd ~/workspace/svn/$1 }
+
+# shortcuts + functions for docker
+  alias b='boot2docker'
+  alias dm='docker-machine'
+
+# functions for docker cleanup
+  dko() { docker kill $1 && docker rm $1 }
+  drma() { docker rm $(docker ps -a -q) }
+  dkla() { docker kill $(docker ps -a -q) }
+  drmu() { docker rmi $(docker images -q --filter "dangling=true") }
+#  drmu() { docker rmi $(docker images -a | grep '^<none>' | awk '{print $3}') }
+  dcln() { dkla; drma; drmu }
+
+
+# shortcuts + functions for git
+  alias gs='git status'
+  alias gb='git branch'
+  alias gba='git branch -a'
+  alias gaa='git add --all && git status'
+  alias gcm='git commit -m'
+  alias gcam='git commit -am'
+  alias glog='git log --oneline --all --graph --decorate'
+
+  jnbcl () { git clone git@github-jnbnyc:jnbnyc/$1.git } 
+
+
+# shortcuts for git-flow
+  alias gff='git flow feature'
+  alias gfr='git flow release'
+  alias gfh='git flow hotfix'
+  alias gffs='git flow feature start'
+  alias gfff='git flow feature finish'
+  alias gfrs='git flow release start'
+  alias gfrf='git flow release finish'
+
+
+# shortcuts + functions for vagrant
+  alias v='vagrant'
+  alias up='vagrant up'
+  alias vs='vagrant status'
+  alias down='vagrant destroy --force' # Don't ask for confirmation before destroying
+  alias vp='vagrant provision'
+  alias in='vagrant up && vagrant ssh'
+
+  bounce () { vagrant destroy $1 --force; vagrant up $1; }
+
+
+# shortcuts for applications
+  alias cask='brew cask'
+  alias vi='vim -N'
+  alias svi='sudo vim'
+
+
+# functions for jira-cli
+ alias jira='jira-cli'
+ jcomment() { jira-cli update $1 --comment }
+ jnewtask() { jira-cli new --type=task --priority=Major --project=$1 $2 }
+ jassign()  { jira-cli update $1 --assign $2 }
+ jview()    { jira-cli view $1 }
+ jopen()    { open $JIRA_URL/browse/$1 }
+ jt()       { jira-cli update $1 --transition $2 }
+ jtstart()  { jt $1 --transition 'start progress' }
+ jtstop()   { jt $1 --transition 'stop progress' }
+ jtclose()  { jt $1 --transition 'close' || jt $1 --transition 'close issue' }
+ jfilter()  { jira-cli view --filter $1 }
+
+printf 'Loaded aliases'
