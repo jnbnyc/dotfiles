@@ -1,8 +1,19 @@
-export DOCKER_TLS_VERIFY="1"
-export DOCKER_HOST="tcp://192.168.99.100:2376"
-export DOCKER_CERT_PATH="/Users/johnbuhay/.docker/machine/machines/docker"
-export DOCKER_MACHINE_NAME="docker"
+#!/bin/bash
 
+
+if docker-machine status docker | grep Running; then
+  eval $(docker-machine env docker)
+elif docker-machine status machine | grep Running; then
+  eval $(docker-machine env machine)
+else
+  echo "Docker daemon not running."
+fi
+
+#export DOCKER_TLS_VERIFY="1"
+#export DOCKER_HOST="tcp://192.168.99.100:2376"
+#export DOCKER_HOST="tcp://192.168.99.101:2376"
+#export DOCKER_CERT_PATH="/Users/johnbuhay/.docker/machine/machines/docker"
+#export DOCKER_MACHINE_NAME="docker"
 
 GNUBIN=libexec/gnubin
 GNUMAN=libexec/gnuman
@@ -18,10 +29,22 @@ USRPATH=~/bin
 SBINPATH=/usr/local/sbin
 
 export PATH=$COREUTILSPATH:$FINDUTILSPATH:$GSEDPATH:$GTARPATH:$USRPATH:$SBINPATH:$PATH
-export MANPATH=$COREUTILSMANPATH:$FINDUTILSMANPATH:$GSEDPATH:$GTARPATH:$MANPATH
+export MANPATH=$COREUTILSMANPATH:$FINDUTILSMANPATH:$GSEDMANPATH:$GTARMANPATH:$MANPATH
 
 
 export LESS=" -RN"
 export LESSOPEN="| /usr/local/Cellar/source-highlight/3.1.7/bin/source-highlight-esc.sh %s"
 
 ssh-add -l
+
+if [ -f ~/.work-bootstrap ]; then
+   source $HOME/.work-bootstrap
+fi
+
+if [ -f ~/.aliases ]; then
+   source $HOME/.aliases
+fi
+
+if [ -f ~/.work-aliases ]; then
+   source $HOME/.work-aliases
+fi
