@@ -87,14 +87,3 @@ if [ -f ~/.bootstrap ]; then
     source $HOME/.bootstrap
 fi
 
-if [ -f ~/.work-bootstrap ]; then
-    source $HOME/.work-bootstrap
-fi
-
-if [ -f ~/.aliases ]; then
-    source $HOME/.aliases
-fi
-
-if [ -f ~/.work-aliases ]; then
-    source $HOME/.work-aliases
-fi
