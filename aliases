@@ -1,21 +1,51 @@
+#!/bin/bash
+
 
 # shortcuts to exit & reload zsh preferences
-  alias zshf="vim ~/.zshrc && source ~/.zshrc"
-  alias alsf="vim ~/.aliases && source ~/.aliases"
-  alias sshf="vim ~/.ssh/config"
-  alias hostsf="svi /etc/hosts"
+  alias dotfiles='cd ~/GoogleDrive/workspace/home'
+  alias bootstrap='source ~/.bootstrap'
 
-# shortcuts to exit & reload bash preferences
-if [ "$SHELL" = "/bin/bash" ]; then
-    alias bashrc="vim ~/.bash_profile && source ~/.bash_profile"
-    alias basha="vim ~/.bash_aliases && source ~/.bash_aliases"
-fi
+
+  edit() {
+    # shortcuts to exit & reload zsh preferences
+      if [[ "$1" == "bootstrap" ]]; then
+        vim ~/.bootstrap && source ~/.bootstrap
+      fi
+      if [[ "$1" == "work" ]]; then
+        vim ~/.work-aliases && source ~/.work-aliases
+      fi
+      if [[ "$1" == "alias" ]]; then
+        vim ~/.aliases && source ~/.aliases
+      fi
+      if [[ "$1" == "zsh" ]]; then
+        vim ~/.zshrc && source ~/.zshrc
+      fi
+      if [[ "$1" == "ssh" ]]; then
+        vim ~/.ssh/config
+      fi
+      if [[ "$1" == "hosts" ]]; then
+        sudo vim /etc/hosts
+      fi
+    # shortcuts to exit & reload bash preferences
+      if [[ "$1" == "bashrc" ]]; then
+        vim ~/.bash_profile && source ~/.bash_profile
+      fi
+      if [[ "$1" == "hosts" ]]; then
+        vim ~/.bash_aliases && source ~/.bash_aliases
+      fi
+  }
+
+
+# if [ "$SHELL" = "/bin/bash" ]; then
+#     alias bashrc="vim ~/.bash_profile && source ~/.bash_profile"
+#     alias basha="vim ~/.bash_aliases && source ~/.bash_aliases"
+# fi
 
 # handy shortcuts
-  alias ls='ls --color=auto'  ## Colorize the ls output ##
+  ## Colorize the ls output ##
   alias la='ls -altr'
   alias ll='ls -la'  ## Use a long listing format ##
-  alias l.='ls -d .* --color=auto' ## Show hidden files ##
+  alias l.='ls -d .*' ## Show hidden files ##
   alias h='history'
   alias c='clear'
   alias rmd='rm -rf'
@@ -44,21 +74,38 @@ fi
   alias ..5='cd ../../../../../'
   alias ..6='cd ../../../../../../'
   alias ..7='cd ../../../../../../../'
+  cd() { builtin cd "$@" && ls; }
  
 # shortcuts to directories
-  alias cellar='cd /usr/local/Cellar'
-  alias caskroom='cd /opt/homebrew-cask/Caskroom'
-  alias ws='cd ~/workspace' 
-  alias gdrive='cd ~/GoogleDrive'
-
-# functions to directories
-  cd() { builtin cd "$@" && ls; }
+  cellar()   {  cd /usr/local/Cellar/$1  }
+  caskroom() {  cd /opt/homebrew-cask/Caskroom/$1  }
+  ws()       {  cd ~/workspace/$1  }
   scmg() { cd ~/workspace/git/$1 }
   scms() { cd ~/workspace/svn/$1 }
+  jnbnyc() { cd ~/workspace/git/github/jnbnyc/$1 }
+  gdrive()   {  cd ~/GoogleDrive/$1  }
+
 
 # shortcuts + functions for docker
-  alias b='boot2docker'
   alias dm='docker-machine'
+  alias doc='docker-compose'
+  alias doover='docker-compose rm -f; docker-compose build && docker cache clean; docker-compose up'
+
+
+  docker()
+  {
+    if [[ "$1" == "cache" ]]; then
+      if [[ "$2" == "clean" ]]; then
+          echo Deleting dangling images
+          docker rmi $(docker images -q --no-trunc --filter "dangling=true") || true
+
+          echo Deleting dangling volumes
+          docker volume rm $(docker volume ls -q --filter "dangling=true") || true
+      fi
+    else
+      echo $@ | xargs docker
+    fi
+  }
 
 # functions for docker cleanup
   dko() { docker kill $1 && docker rm $1 }
@@ -67,7 +114,17 @@ fi
   drmu() { docker rmi $(docker images -q --filter "dangling=true") }
 #  drmu() { docker rmi $(docker images -a | grep '^<none>' | awk '{print $3}') }
   dcln() { dkla; drma; drmu }
+  dxc() { docker exec -it $1 bash }
+  dbounce() { docker-compose rm -f && docker-compose up }
 
+
+#  functions that edit etc/hosts !!
+  hosts()
+  {
+    if [[ "$1" == "docker" ]]; then
+      sudo sed -i -r "s/^([0-9]+\.){3}[0-9]+\s\w+\s{2}#\sdocker/$(echo $DOCKER_HOST|grep -oP "(\d+\.){3}\d+") $DOCKER_MACHINE_NAME  # docker/g" /etc/hosts
+    fi
+  }
 
 # shortcuts + functions for git
   alias gs='git status'
@@ -78,8 +135,21 @@ fi
   alias gcam='git commit -am'
   alias glog='git log --oneline --all --graph --decorate'
 
-  jnbcl () { git clone git@github-jnbnyc:jnbnyc/$1.git } 
+  github-clone()  { git clone git@github.com:jnbnyc/$1.git }
+  github-create() { curl -X POST -u jnbnyc -d "{\"name\": \"$1\" }" https://api.github.com/user/repos }
 
+# setup commit author
+  gitcfg()
+  {
+    if [[ "$1" == "jnbnyc" ]]; then
+      git config --local user.name jnbnyc
+      git config --local user.email jnbuhaynyc@gmail.com
+    else
+      git config --local user.name "John Buhay"
+      git config --local user.email john.buhay@weightwatchers.com
+    fi
+    # git config --local -l
+  }
 
 # shortcuts for git-flow
   alias gff='git flow feature'
@@ -98,7 +168,6 @@ fi
   alias down='vagrant destroy --force' # Don't ask for confirmation before destroying
   alias vp='vagrant provision'
   alias in='vagrant up && vagrant ssh'
-
   bounce () { vagrant destroy $1 --force; vagrant up $1; }
 
 
@@ -108,17 +177,43 @@ fi
   alias svi='sudo vim'
 
 
+# mach displays the basic information about the system
+mach()
+{
+    echo -e "\nMachine information:" ; uname -a
+    echo -e "\nUsers logged on:" ; w -h
+    echo -e "\nCurrent date :" ; date
+    echo -e "\nMachine status :" ; uptime
+    #echo -e "\nMemory status :" ; free
+    echo -e "\nFilesystem status :"; df -h
+}
+
+
+# generate a random password with a specified length, defaults to 8
+rpass()  {  tr -dc A-Za-z0-9_ < /dev/urandom | head -c ${1:=8} | xargs  }
+
+
+# functions for akamai
+  iscached() { curl -I -H 'Pragma: akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key' $1 }
+
+
 # functions for jira-cli
  alias jira='jira-cli'
- jcomment() { jira-cli update $1 --comment }
- jnewtask() { jira-cli new --type=task --priority=Major --project=$1 $2 }
- jassign()  { jira-cli update $1 --assign $2 }
- jview()    { jira-cli view $1 }
- jopen()    { open $JIRA_URL/browse/$1 }
- jt()       { jira-cli update $1 --transition $2 }
- jtstart()  { jt $1 --transition 'start progress' }
- jtstop()   { jt $1 --transition 'stop progress' }
- jtclose()  { jt $1 --transition 'close' || jt $1 --transition 'close issue' }
- jfilter()  { jira-cli view --filter $1 }
+ j() { jira-cli $@ }
+ jcomment()     { jira-cli update $1 --comment }
+ jnewtask()     { jira-cli --new=task --title=$2 --project=$1 $3 }
+ jnewbug()      { jira-cli --new=bug --title=$2 --project=$1 $3 }
+ jassign()      { jira-cli update $1 --assign $2 }
+ jview()        { jira-cli view $@ }
+ jopen()        { open $JIRA_URL/browse/$1 }
+ jt()           { jira-cli update $1 --transition $2 }
+ jtstart()      { jt $1 'start progress' }
+ jtstop()       { jt $1 'stop progress' }
+ jtresolve()    { jt $1 'resolve' || jt $1 'Resolve Issue' }
+ jtclose()      { jt $1 'close' || jt $1 'close issue' }
+ jfilter()      { jira-cli view --filter $1 }
+ jfilter1()     { jira-cli view --filter $1 --oneline }
+ jfindt()       { jira-cli list transitions --issue=$1 }
 
-printf 'Loaded aliases'
+
+printf 'Loaded aliases. '
