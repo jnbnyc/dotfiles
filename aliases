@@ -6,35 +6,67 @@
   alias bootstrap='source ~/.bootstrap'
 
 
-  edit() {
-    # shortcuts to exit & reload zsh preferences
-      if [[ "$1" == "bootstrap" ]]; then
-        vim ~/.bootstrap && source ~/.bootstrap
-      fi
-      if [[ "$1" == "work" ]]; then
-        vim ~/.work-aliases && source ~/.work-aliases
-      fi
-      if [[ "$1" == "alias" ]]; then
-        vim ~/.aliases && source ~/.aliases
-      fi
-      if [[ "$1" == "zsh" ]]; then
-        vim ~/.zshrc && source ~/.zshrc
-      fi
-      if [[ "$1" == "ssh" ]]; then
-        vim ~/.ssh/config
-      fi
-      if [[ "$1" == "hosts" ]]; then
-        sudo vim /etc/hosts
-      fi
-    # shortcuts to exit & reload bash preferences
-      if [[ "$1" == "bashrc" ]]; then
-        vim ~/.bash_profile && source ~/.bash_profile
-      fi
-      if [[ "$1" == "hosts" ]]; then
-        vim ~/.bash_aliases && source ~/.bash_aliases
-      fi
-  }
+  # edit() {
+  #   # shortcuts to exit & reload zsh preferences
+  #     if [[ "$1" == "bootstrap" ]]; then
+  #       vim ~/.bootstrap && source ~/.bootstrap
+  #     fi
+  #     if [[ "$1" == "work" ]]; then
+  #       vim ~/.work-aliases && source ~/.work-aliases
+  #     fi
+  #     if [[ "$1" == "alias" ]]; then
+  #       vim ~/.aliases && source ~/.aliases
+  #     fi
+  #     if [[ "$1" == "zsh" ]]; then
+  #       vim ~/.zshrc && source ~/.zshrc
+  #     fi
+  #     if [[ "$1" == "ssh" ]]; then
+  #       vim ~/.ssh/config
+  #     fi
+  #     if [[ "$1" == "hosts" ]]; then
+  #       sudo vim /etc/hosts
+  #     fi
+  #   # shortcuts to exit & reload bash preferences
+  #     if [[ "$1" == "bashrc" ]]; then
+  #       vim ~/.bash_profile && source ~/.bash_profile
+  #     fi
+  #     if [[ "$1" == "hosts" ]]; then
+  #       vim ~/.bash_aliases && source ~/.bash_aliases
+  #     fi
+  # }
 
+  edit() {
+    case "$1" in
+    # shortcuts to exit & reload zsh preferences
+      bootstrap)
+        vim ~/.bootstrap && source ~/.bootstrap
+      ;;
+      work)
+        vim ~/.work-aliases && source ~/.work-aliases
+      ;;
+      alias)
+        vim ~/.aliases && source ~/.aliases
+      ;;
+      zsh)
+        vim ~/.zshrc && source ~/.zshrc
+      ;;
+      ssh)
+        vim ~/.ssh/config
+      ;;
+      hosts)
+        sudo vim /etc/hosts
+      ;;
+    # shortcuts to exit & reload bash preferences
+      bashrc)
+        vim ~/.bash_profile && if [[ $SHELL == "/bin/bash" ]]; then source ~/.bash_profile; fi
+      ;;
+      basha)
+        vim ~/.bash_aliases && if [[ $SHELL == "/bin/bash" ]]; then source ~/.bash_aliases; fi
+      ;;
+      *)
+        if [[ -f $1 ]]; then vim $1; else printf "Don't know about that: $1"; fi
+    esac
+  }
 
 # if [ "$SHELL" = "/bin/bash" ]; then
 #     alias bashrc="vim ~/.bash_profile && source ~/.bash_profile"
@@ -166,7 +198,7 @@
   alias down='vagrant destroy --force' # Don't ask for confirmation before destroying
   alias vp='vagrant provision'
   alias in='vagrant up && vagrant ssh'
-  bounce () { vagrant destroy $1 --force; vagrant up $1; }
+  bounce() { vagrant destroy $1 --force; vagrant up $1; }
 
 
 # shortcuts for applications
@@ -199,8 +231,8 @@
  alias jira='jira-cli'
  j() { jira-cli $@ }
  jcomment()     { jira-cli update $1 --comment }
- jnewtask()     { jira-cli --new=task --title=$2 --project=$1 $3 }
- jnewbug()      { jira-cli --new=bug --title=$2 --project=$1 $3 }
+ jnewtask()     { jira-cli new --project $1 --type task --description "$3" --assignee ${4:=john.buhay} "$2" }
+ jnewbug()      { jira-cli new --project $1 --type bug  --description "$3" --assignee ${4:=john.buhay} "$2" }
  jassign()      { jira-cli update $1 --assign $2 }
  jview()        { jira-cli view $@ }
  jopen()        { open $JIRA_URL/browse/$1 }
@@ -210,7 +242,7 @@
  jtresolve()    { jt $1 'resolve' || jt $1 'Resolve Issue' }
  jtclose()      { jt $1 'close' || jt $1 'close issue' }
  jfilter()      { jira-cli view --filter $1 }
- jfilter1()     { jira-cli view --filter $1 --oneline }
+ joneline()     { jira-cli view --filter $1 --oneline }
  jfindt()       { jira-cli list transitions --issue=$1 }
 
 
