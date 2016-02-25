@@ -1,3 +1,5 @@
+set number  " display line numbers
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Maintainer: 
 "       Amir Salihefendic
