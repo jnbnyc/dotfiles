@@ -140,11 +140,15 @@
       echo Deleting dangling volumes
       docker volume rm $(docker volume ls -q --filter "dangling=true") || true
     else
-      echo $@ | xargs docker
+      if [[ "$1" != "exec" ]]; then
+        echo $@ | xargs docker  # throws error: "cannot enable tty mode on non tty input" for docker exec
+      else
+        printf "Use dxc alias: $(which dxc)"
+      fi
     fi
   }
 
-  dxc() { docker exec -it $1 bash }
+  dxc() { command docker exec -it $1 bash }
   dbounce() { docker-compose rm -f && docker-compose up }
 
 
@@ -165,6 +169,7 @@
   alias gcam='git commit -am'
   alias glog='git log --oneline --all --graph --decorate'
 
+  github() { cd ~/GoogleDrive/workspace/github }
   github-clone()  { git clone git@github-jnbnyc:jnbnyc/$1.git }  #  ssh config specifies which key to use
   github-create() { curl -X POST -u jnbnyc -d "{\"name\": \"$1\" }" https://api.github.com/user/repos }
 
