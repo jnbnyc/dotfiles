@@ -1,36 +1,45 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
+function setup() {
+  #export DOCKER_TLS_VERIFY="1"
+  export WHOAMI=john.buhay
+  GNUBIN=libexec/gnubin
+  GNUMAN=libexec/gnuman
+  COREUTILSPATH=$(brew --prefix coreutils)/$GNUBIN
+  COREUTILSMANPATH=$(brew --prefix coreutils)/$GNUMAN
+  FINDUTILSPATH=$(brew --prefix findutils)/$GNUBIN
+  FINDUTILSMANPATH=$(brew --prefix findutils)/$GNUMAN
+  GSEDPATH=$(brew --prefix gnu-sed)/$GNUBIN
+  GSEDMANPATH=$(brew --prefix gnu-sed)/$GNUMAN
+  GTARPATH=$(brew --prefix gnu-tar)/$GNUBIN
+  GTARMANPATH=$(brew --prefix gnu-tar)/$GNUMAN
+  USRPATH=~/bin
+  SBINPATH=/usr/local/sbin
+
+  export GOPATH=$HOME/workspace
+  GOLANGPATH=/usr/local/opt/go/libexec/bin
+
+  export PATH=$GOLANGPATH:$COREUTILSPATH:$FINDUTILSPATH:$GSEDPATH:$GTARPATH:$USRPATH:$SBINPATH:$PATH
+  export MANPATH=$COREUTILSMANPATH:$FINDUTILSMANPATH:$GSEDMANPATH:$GTARMANPATH:$MANPATH
+
+
+  export LESS=" -RN"
+  export LESSOPEN="| $(brew --prefix source-highlight)/bin/source-highlight-esc.sh %s"
+}
+
+
+setup
 
 if docker-machine status docker | grep Running; then
   eval $(docker-machine env docker)
+  export DOCKER_HOST_IP=$(echo $DOCKER_HOST|grep -oP "(\d+\.){3}\d+")
 elif docker-machine status machine | grep Running; then
   eval $(docker-machine env machine)
 else
   echo "Docker daemon not running."
 fi
-
-#export DOCKER_TLS_VERIFY="1"
-
-GNUBIN=libexec/gnubin
-GNUMAN=libexec/gnuman
-COREUTILSPATH=$(brew --prefix coreutils)/$GNUBIN
-COREUTILSMANPATH=$(brew --prefix coreutils)/$GNUMAN
-FINDUTILSPATH=$(brew --prefix findutils)/$GNUBIN
-FINDUTILSMANPATH=$(brew --prefix findutils)/$GNUMAN
-GSEDPATH=$(brew --prefix gnu-sed)/$GNUBIN
-GSEDMANPATH=$(brew --prefix gnu-sed)/$GNUMAN
-GTARPATH=$(brew --prefix gnu-tar)/$GNUBIN
-GTARMANPATH=$(brew --prefix gnu-tar)/$GNUMAN
-USRPATH=~/bin
-SBINPATH=/usr/local/sbin
-
-export PATH=$COREUTILSPATH:$FINDUTILSPATH:$GSEDPATH:$GTARPATH:$USRPATH:$SBINPATH:$PATH
-export MANPATH=$COREUTILSMANPATH:$FINDUTILSMANPATH:$GSEDMANPATH:$GTARMANPATH:$MANPATH
-
-
-export LESS=" -RN"
-export LESSOPEN="| $(brew --prefix source-highlight)/bin/source-highlight-esc.sh %s"
-
+# Use DOCKER_OPTS to modify the daemon startup options.
+DOCKER_OPTS="--dns 127.0.1.1 --dns 8.8.8.8"
 
 ssh-add -l
 

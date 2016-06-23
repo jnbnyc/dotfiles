@@ -120,9 +120,11 @@
 
 # shortcuts + functions for docker
   alias dm='docker-machine'
-  alias doc='docker-compose'
-  alias doover='docker-compose rm -f; docker-compose build && docker cache clean; docker-compose up'
+  alias rebuild='docker-compose rm -f; docker-compose build && docker cache clean; docker-compose up'
 
+# docker-compose shortcuts + functions
+  alias doc='docker-compose'
+  docredo() { docker clean all; docker-compose up -d }
 
   docker()
   {
@@ -140,7 +142,7 @@
       echo Deleting dangling volumes
       docker volume rm $(docker volume ls -q --filter "dangling=true") || true
     else
-      if [[ "$1" != "exec" ]]; then
+      if [[ "$1" != "exec" ]] && [[ "$2" != "-it" ]]; then
         echo $@ | xargs docker  # throws error: "cannot enable tty mode on non tty input" for docker exec
       else
         printf "Use dxc alias: $(which dxc)"
@@ -148,7 +150,18 @@
     fi
   }
 
-  dxc() { command docker exec -it $1 bash }
+  dxc() { 
+      if [[ -z "$1" ]]; then
+          command docker exec -it $(docker ps -l -q) bash ||  \
+          command docker exec -it $(docker ps -l -q) sh
+      else
+          command docker exec -it $(docker ps | grep $1 | awk '{print $1}') bash || sh
+          #command docker exec -it $1 bash
+      fi
+  }
+  drun() {
+      command docker run -it $@
+  }
   dbounce() { docker-compose rm -f && docker-compose up }
 
 
@@ -169,7 +182,7 @@
   alias gcam='git commit -am'
   alias glog='git log --oneline --all --graph --decorate'
 
-  github() { cd ~/GoogleDrive/workspace/github }
+  _github() { cd ~/GoogleDrive/workspace/github }
   github-clone()  { git clone git@github-jnbnyc:jnbnyc/$1.git }  #  ssh config specifies which key to use
   github-create() { curl -X POST -u jnbnyc -d "{\"name\": \"$1\" }" https://api.github.com/user/repos }
 
@@ -251,4 +264,17 @@
  jfindt()       { jira-cli list transitions --issue=$1 }
 
 
+# functions for curl
+time-curl() {
+    curl -w "\n
+                time_namelookup:  %{time_namelookup}\n
+                time_connect:  %{time_connect}\n
+                time_appconnect:  %{time_appconnect}\n
+                time_pretransfer:  %{time_pretransfer}\n
+                time_redirect:  %{time_redirect}\n
+                time_starttransfer:  %{time_starttransfer}\n
+                ----------\n
+                time_total:  %{time_total}\n
+            \n" -s -v $@
+}
 printf 'Loaded aliases. '
