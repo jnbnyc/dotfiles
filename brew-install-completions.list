@@ -1,0 +1,6 @@
+brew-cask-completion
+docker-completion
+docker-compose-completion
+docker-machine-completion
+pip-completion
+vagrant-completion
