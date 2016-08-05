@@ -1,5 +1,5 @@
 # shortcuts to exit & reload bash preferences
-  alias bashrc="vim ~/.bash_profile && source ~/.bash_profile"
+  alias bashrc="vim ~/.bashrc && source ~/.bashrc"
   alias basha="vim ~/.bash_aliases && source ~/.bash_aliases"
 
 

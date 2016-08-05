@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# aliases for jira-cli
+  alias jira='jira-cli'
+
+
+# functions for jira-cli
+   j() { jira-cli $@; }
+   jcomment()     { jira-cli update $1 --comment; }
+   jnewtask()     { jira-cli new --project $1 --type task --description "$3" --assignee ${4:=john.buhay} "$2"; }
+   jnewbug()      { jira-cli new --project $1 --type bug  --description "$3" --assignee ${4:=john.buhay} "$2"; }
+   jassign()      { jira-cli update $1 --assign $2; }
+   jview()        { jira-cli view $@; }
+   jopen()        { open $JIRA_URL/browse/$1; }
+   jt()           { jira-cli update $1 --transition $2; }
+   jtstart()      { jt $1 'start progress'; }
+   jtstop()       { jt $1 'stop progress'; }
+   jtresolve()    { jt $1 'resolve' || jt $1 'Resolve Issue'; }
+   jtclose()      { jt $1 'close' || jt $1 'close issue'; }
+   jfilter()      { jira-cli view --filter $1; }
+   joneline()     { jira-cli view --filter $1 --oneline; }
+   jfindt()       { jira-cli list transitions --issue=$1; }
+
+echo 'Loaded jira shortcuts.'

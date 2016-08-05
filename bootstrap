@@ -1,56 +1,79 @@
 #!/usr/bin/env bash
 
-function setup() {
-  #export DOCKER_TLS_VERIFY="1"
-  export WHOAMI=john.buhay
+export HOME=${HOME:-/Users/$(whoami)}
+export WORKSPACE=$HOME/workspace
+export TOOLS_DIR=$WORKSPACE/tools
+export GDRIVE=$HOME/googleDrive
+export DOTFILES_DIR=$GDRIVE/dotfiles
+export DEFAULT_PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+export USRPATH=$HOME/bin
+
+function setup-shell() {
   GNUBIN=libexec/gnubin
   GNUMAN=libexec/gnuman
-  COREUTILSPATH=$(brew --prefix coreutils)/$GNUBIN
-  COREUTILSMANPATH=$(brew --prefix coreutils)/$GNUMAN
-  FINDUTILSPATH=$(brew --prefix findutils)/$GNUBIN
-  FINDUTILSMANPATH=$(brew --prefix findutils)/$GNUMAN
-  GSEDPATH=$(brew --prefix gnu-sed)/$GNUBIN
-  GSEDMANPATH=$(brew --prefix gnu-sed)/$GNUMAN
-  GTARPATH=$(brew --prefix gnu-tar)/$GNUBIN
-  GTARMANPATH=$(brew --prefix gnu-tar)/$GNUMAN
-  USRPATH=~/bin
-  SBINPATH=/usr/local/sbin
 
-  export GOPATH=$HOME/workspace
-  GOLANGPATH=/usr/local/opt/go/libexec/bin
+  COREUTILS_BASE=$(brew --prefix coreutils)
+  COREUTILS_PATH=$COREUTILS_BASE/$GNUBIN
+  COREUTILS_MANPATH=$COREUTILS_BASE/$GNUMAN
+  
+  FINDUTILS_BASE=$(brew --prefix findutils)
+  FINDUTILS_PATH=$FINDUTILS_BASE/$GNUBIN
+  FINDUTILS_MANPATH=$FINDUTILS_BASE/$GNUMAN
+  
+  GSED_BASE=$(brew --prefix gnu-sed)
+  GSED_PATH=$GSED_BASE/$GNUBIN
+  GSED_MANPATH=$GSED_MANPATH/$GNUMAN
+  
+  GTAR_BASE=$(brew --prefix gnu-tar)
+  GTAR_PATH=$GTAR_BASE/$GNUBIN
+  GTAR_MANPATH=$GTAR_BASE/$GNUMAN
 
-  export PATH=$GOLANGPATH:$COREUTILSPATH:$FINDUTILSPATH:$GSEDPATH:$GTARPATH:$USRPATH:$SBINPATH:$PATH
-  export MANPATH=$COREUTILSMANPATH:$FINDUTILSMANPATH:$GSEDMANPATH:$GTARMANPATH:$MANPATH
+  #export DOCKER_TLS_VERIFY="1"
+  # export GOPATH=$HOME/workspace
+  # GOLANGPATH=/usr/local/opt/go/libexec/bin
 
+  export PATH=$GOLANGPATH:$COREUTILS_PATH:$FINDUTILS_PATH:$GSED_PATH:$GTAR_PATH:$USRPATH:$DEFAULT_PATH
+  export MANPATH=$COREUTILS_MANPATH:$FINDUTILS_MANPATH:$GSED_MANPATH:$GTAR_MANPATH:$MANPATH
 
-  export LESS=" -RN"
-  export LESSOPEN="| $(brew --prefix source-highlight)/bin/source-highlight-esc.sh %s"
+  LESS_BASE=$(brew --prefix source-highlight)
+  # export LESS=" -RN"
+  # export LESSOPEN="| $(brew --prefix source-highlight)/bin/source-highlight-esc.sh %s"
 }
 
 
-setup
+function setup-docker() {
+  if docker-machine status buhay-12 | grep Running; then
+    eval $(docker-machine env buhay-12)
+    export DOCKER_HOST_IP=$(docker-machine ip buhay-12)  # $(echo $DOCKER_HOST|grep -oP "(\d+\.){3}\d+")
+  elif docker-machine status docker | grep Running; then
+    eval $(docker-machine env docker)
+  elif docker-machine status machine | grep Running; then
+    eval $(docker-machine env machine)
+  else
+    echo "Docker daemon not running."
+  fi
+  # Use DOCKER_OPTS to modify the daemon startup options.
+  DOCKER_OPTS="--dns 127.0.1.1 --dns 8.8.8.8"
+}
 
-if docker-machine status docker | grep Running; then
-  eval $(docker-machine env docker)
-  export DOCKER_HOST_IP=$(echo $DOCKER_HOST|grep -oP "(\d+\.){3}\d+")
-elif docker-machine status machine | grep Running; then
-  eval $(docker-machine env machine)
-else
-  echo "Docker daemon not running."
-fi
-# Use DOCKER_OPTS to modify the daemon startup options.
-DOCKER_OPTS="--dns 127.0.1.1 --dns 8.8.8.8"
+
+function scan-for-files() {
+  if [ -f $HOME/.aliases ]; then
+     source $HOME/.aliases
+  fi
+
+  if [ -f $HOME/.wework-bootstrap ]; then
+     source $HOME/.wework-bootstrap
+  fi
+}
+
+
+# if [ "$SHELL" = "/bin/bash" ]; then
+#     alias bashrc="vim ~/.bash_profile && source ~/.bash_profile"
+#     alias basha="vim ~/.bash_aliases && source ~/.bash_aliases"
+# fi
 
 ssh-add -l
-
-if [ -f ~/.work-bootstrap ]; then
-   source $HOME/.work-bootstrap
-fi
-
-if [ -f ~/.aliases ]; then
-   source $HOME/.aliases
-fi
-
-if [ -f ~/.work-aliases ]; then
-   source $HOME/.work-aliases
-fi
+# setup-shell
+# setup-docker
+scan-for-files

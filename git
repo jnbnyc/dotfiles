@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+
+ghcl() { git clone https://github.com/$1.git; }
+
+# functions for jnbnyc-github
+  function jnbnyc-clone()  { git clone https://github.com/jnbnyc/$1.git; }  #  ssh config specifies which key to use
+  function jnbnyc-create() { curl -X POST -u jnbnyc -d "{\"name\": \"$1\" }" https://api.github.com/user/repos; }
+
+# functions for wework-github
+  function wework-clone()  { git clone https://github.com/weconnect/$1.git; }  # wework
+  function wework-create() { curl -X POST -u jnbnyc -d "{\"name\": \"$1\" }" https://api.github.com/org/weconnect/repos; }  # wework
+
+# setup commit author
+  function gitcfg() {
+    if [[ "$1" == "jnbnyc" ]]; then
+      git config --local user.name jnbnyc
+      git config --local user.email jnbuhaynyc@gmail.com
+    else
+      git config --local user.name "John Buhay" # wework
+      git config --local user.email "john.buhay@wework.com" # wework
+    fi
+  }
+
+
+# shortcuts + functions for git
+  alias gs='git status'
+  alias gb='git branch'
+  alias gba='git branch -a'
+  alias gaa='git add --all && git status'
+  alias gcm='git commit -m'
+  alias gca='git commit -am'
+  alias glog='git log --oneline --all --graph --decorate'
+
+
+# shortcuts for git-flow
+#   alias gff='git flow feature'
+#   alias gfr='git flow release'
+#   alias gfh='git flow hotfix'
+#   alias gffs='git flow feature start'
+#   alias gfff='git flow feature finish'
+#   alias gfrs='git flow release start'
+#   alias gfrf='git flow release finish'
+
+# bash/zsh completetions
+source /opt/local/etc/bash_completion.d/git-completion.bash
+echo 'Loaded git shortcuts.'
