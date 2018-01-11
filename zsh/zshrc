@@ -10,7 +10,6 @@ export WORKSPACE=$HOME/workspace
 export WORKSPACE_GITHUB=$WORKSPACE/github.com
 
 export DOTFILES_DIR=$WORKSPACE_GITHUB/jnbnyc/dotfiles
-# $GDRIVE/github.com/
 
 export ZSH_DIR=$WORKSPACE_GITHUB/robbyrussell/oh-my-zsh
 
