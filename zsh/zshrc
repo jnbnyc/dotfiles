@@ -11,7 +11,7 @@ export WORKSPACE_GITHUB=$WORKSPACE/github.com
 
 export DOTFILES_DIR=$WORKSPACE_GITHUB/jnbnyc/dotfiles
 
-export ZSH_DIR=$WORKSPACE_GITHUB/robbyrussell/oh-my-zsh
+export ZSH_DIR=$DOTFILES_DIR/zsh
 
 # /usr/local/opt/go/libexec/bin
 export GOPATH=$HOME/.go
