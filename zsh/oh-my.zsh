@@ -4,7 +4,7 @@ export UPDATE_ZSH_DAYS=7
 export ZSH=$WORKSPACE_GITHUB/robbyrussell/oh-my-zsh
 DISABLE_UPDATE_PROMPT=true
 HYPHEN_INSENSITIVE="true"
-ZSH_THEME="powerlevel9k/powerlevel9k" # ys
+# ZSH_THEME="powerlevel9k/powerlevel9k" # ys
 
 bindkey '^ ' autosuggest-accept # Accepts the current suggestion.
 # bind '' autosuggest-execute # Accepts and executes the current suggestion.

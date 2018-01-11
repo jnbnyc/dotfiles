@@ -40,7 +40,7 @@ function scan-for-files {
   done
 }
 
-if [ $(uname) == "Darwin" ]; then
+if [[ "$(uname)" == "Darwin" ]]; then
   setup-osx-path
 else
   setup-linux-path
