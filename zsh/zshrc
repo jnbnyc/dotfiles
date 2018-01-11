@@ -1,0 +1,41 @@
+#!/usr/bin/env zsh
+
+export DEFAULT_PATH=$PATH
+# export EDITOR='vim'
+export HOME=${HOME:-/Users/$(whoami)}
+export CLOUDSTATION=$HOME/cloud-station
+export GDRIVE=$HOME/google-drive
+export USRPATH=$HOME/bin
+export WORKSPACE=$HOME/workspace
+export WORKSPACE_GITHUB=$WORKSPACE/github.com
+
+export DOTFILES_DIR=$WORKSPACE_GITHUB/jnbnyc/dotfiles
+# $GDRIVE/github.com/
+
+export ZSH_DIR=$WORKSPACE_GITHUB/robbyrussell/oh-my-zsh
+
+# /usr/local/opt/go/libexec/bin
+export GOPATH=$HOME/.go
+export GOBIN=$GOPATH/bin
+
+export KUBECONFIG=".kubeconfig:${HOME}/.kube/conf.d/*config:${HOME}/.kube/config"
+
+# zsh-completions
+fpath=(/usr/local/share/zsh-completions $fpath)
+
+# Configure history
+[ -f $ZSH_DIR/history.zsh ] && source $ZSH_DIR/history.zsh
+
+# Load theme
+[ -f $ZSH_DIR/powerlevel9k.zsh ] && source $ZSH_DIR/powerlevel9k.zsh
+
+# Load oh-my-zsh
+[ -f $ZSH_DIR/oh-my.zsh ] && source $ZSH_DIR/oh-my.zsh
+
+# Load user configuration
+[ -f $ZSH_DIR/bootstrap.zsh ] && source $ZSH_DIR/bootstrap.zsh
+
+echo "Loaded $SHELL shell"
+
+#eval "$(ssh-agent -s)"
+ssh-add -l || true
