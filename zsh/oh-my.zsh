@@ -1,10 +1,6 @@
 #!/usr/bin/env zsh
 
-export UPDATE_ZSH_DAYS=7
-export ZSH=$WORKSPACE_GITHUB/robbyrussell/oh-my-zsh
-DISABLE_UPDATE_PROMPT=true
-HYPHEN_INSENSITIVE="true"
-# ZSH_THEME="powerlevel9k/powerlevel9k" # ys
+source $WORKSPACE_GITHUB/zsh-users/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 bindkey '^ ' autosuggest-accept # Accepts the current suggestion.
 # bind '' autosuggest-execute # Accepts and executes the current suggestion.
@@ -13,6 +9,12 @@ bindkey '^ ' autosuggest-accept # Accepts the current suggestion.
 # bind '' autosuggest-disable # Disables suggestions.
 # bind '' autosuggest-enable # Re-enables suggestions.
 # bind '' autosuggest-toggle # Toggles between enabled/disabled suggestions.
+
+export UPDATE_ZSH_DAYS=7
+export ZSH=$WORKSPACE_GITHUB/robbyrussell/oh-my-zsh
+DISABLE_UPDATE_PROMPT=true
+HYPHEN_INSENSITIVE="true"
+# ZSH_THEME="powerlevel9k/powerlevel9k" # ys
 
 plugins=(history-substring-search zsh-autosuggestions)
 source $ZSH/oh-my-zsh.sh
