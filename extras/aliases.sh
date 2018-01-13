@@ -1,6 +1,6 @@
 # requires bootstrap!
 
-alias dotfiles='cd $GDRIVE/dotfiles'
+alias dotfiles='cd $DOTFILES_DIR'
 alias ss='screensaver'
 
 # handy shortcuts

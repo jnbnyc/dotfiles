@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 function setup-linux-path {
-  export PATH=$USRPATH:$GOBIN:$DEFAULT_PATH
+  # export PATH=$GOBIN:$DEFAULT_PATH
 }
 
 function setup-osx-path {
