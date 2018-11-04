@@ -16,28 +16,31 @@ alias mkdir='mkdir -pv'
 alias ping='ping -c 5'  ## Stop after sending count ECHO_REQUEST packets ##
 alias fastping='ping -c 100 -s.2'  ## Do not wait interval 1 second, go fast ##
 
-# # Higher verbosity
-#   alias mv='mv -i'
-#   alias cp='cp -i'
-#   alias ln='ln -i'
+# Higher verbosity
+alias mv='mv -v'
+alias cp='cp -v'
+alias ln='ln -v'
+alias rm='rm -v'
 #   alias cwhich='command which'
 
 #  useful tools
-function view-csv() { column -s, -t < $1 | less -#2 -N -S; }
+function view-csv { column -s, -t < $1 | less -#2 -N -S; }
 
-# ## Colorize the grep command output for ease of use (good for log files) ##
-# # alias grep='grep --color=auto'
-# # alias egrep='egrep --color=auto'
-# # alias fgrep='fgrep --color=auto'
+## Colorize the grep command output for ease of use (good for log files) ##
+# alias grep='grep --color=auto'
+# alias egrep='egrep --color=auto'
+# alias fgrep='fgrep --color=auto'
 
 # folder navigation
 alias  ..='cd ..'
-alias ..2='cd ../../'
-alias ..3='cd ../../../'
-alias ..4='cd ../../../../'
-alias ..5='cd ../../../../../'
-alias ..6='cd ../../../../../../'
-alias ..7='cd ../../../../../../../'
+alias ..2='cd ../..'
+alias ..3='cd ../../..'
+alias ..4='cd ../../../..'
+alias ..5='cd ../../../../..'
+alias ..6='cd ../../../../../..'
+alias ..7='cd ../../../../../../..'
+alias ..8='cd ../../../../../../../..'
+
 function cd { builtin cd "$@" && ls; }
 
 
@@ -57,20 +60,21 @@ alias vi='vim -N'
 alias svi='sudo vim'
 
 
-# # mach displays the basic information about the system
-#   mach()
-#   {
-#       echo -e "\nMachine information:" ; uname -a
-#       echo -e "\nUsers logged on:" ; w -h
-#       echo -e "\nCurrent date :" ; date
-#       echo -e "\nMachine status :" ; uptime
-#       #echo -e "\nMemory status :" ; free
-#       echo -e "\nFilesystem status :"; df -h
-#   }
+# mach displays the basic information about the system
+function mach {
+    echo -e "\nMachine information:" ; uname -a
+    echo -e "\nUsers logged on:" ; w -h
+    echo -e "\nCurrent date :" ; date
+    echo -e "\nMachine status :" ; uptime
+    # [ $(uname -s) == "Linux" ] && echo -e "\nMemory status :" ; free
+    echo -e "\nFilesystem status :"; df -h
+}
 
 
 # generate a random password with a specified length, defaults to 18
-  rpass()  {  tr -dc A-Za-z0-9_ < /dev/urandom | head -c ${1:=18} | xargs  }
+function rpass {
+  tr -dc A-Za-z0-9_ < /dev/urandom | head -c ${1:=18} | xargs
+}
 
 
 # functions for curl
