@@ -1,6 +1,22 @@
 # docker shortcuts + functions
 
-alias compose='docker-compose'
+alias c='docker-compose'
+alias d='docker'
+
+alias dcup='docker-compose up'
+alias dcdown='docker-compose down'
+
+alias vp='docker-compose provision'
+alias in='docker-compose up && docker-compose ssh'
+
+alias up='docker-compose up'
+alias down='docker-compose down'
+
+alias bounce='dbounce'
+
+function dbounce {
+  docker-compose rm -f; docker-compose up -d $1
+}
 
 function docker-sleep {
   docker run -d --name sleepingbeauty --entrypoint /bin/sleep $1 ${2:-1h}
@@ -10,22 +26,19 @@ function docker-start {
   open /Applications/Docker.app
 }
 
-function docker-reload {
-  docker-stop
-  docker-start
-}
+function docker-exec { docker exec -it $1 $2 }
+function docker-sh { docker exec -it $1 sh }
+function docker-bash { docker exec -it $1 bash }
 
-#   alias rebuild='docker-compose rm -f; docker-compose build && docker cache clean; docker-compose up'
-#   docredo { docker clean all; docker-compose up -d }
-
-function docker-exec { command docker exec -it $1 $2 }
 function dxc {
-  [[ ! -z "$1" ]] && _image=$(docker ps | grep $1 | awk '{print $1}')
-  [[ -z "$1" ]] && _image=$(docker ps -l -q)
-  docker-exec $_image bash || docker-exec $_image sh
+  if [ -z "$1" ]; then
+    _image=$(docker ps -l -q)
+  else
+    _image=$(docker ps | grep $1 | awk '{print $1}')
+  fi
+  echo docker-bash $_image || echo docker-sh $_image
 }
 
-function drun { command docker run -it $@; }
-function dbounce { docker-compose rm -f && docker-compose up; }
+function drun { docker run -it $@; }
 
 echo "Loaded docker shortcuts"
