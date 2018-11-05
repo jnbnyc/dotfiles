@@ -35,7 +35,7 @@ function setup-osx-path {
 
 # source extras
 function scan-for-files {
-  for each in $(find $DOTFILES_DIR/extras/ -type f); do
+  for each in $(find $DOTFILES_DIR/extras -type f -iname "*.sh"); do
     source $each
   done
 }
