@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 export DEFAULT_PATH=$PATH
-# export EDITOR='vim'
+export EDITOR=vim
 export HOME=${HOME:-/Users/$(whoami)}
 export CLOUDSTATION=$HOME/cloud-station
 export GDRIVE=$HOME/google-drive
@@ -32,7 +32,12 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 # Load user configuration
 [ -f $ZSH_DIR/bootstrap.zsh ] && source $ZSH_DIR/bootstrap.zsh
 
+# bindkey for auto-suggest from oh-my.zsh
+bindkey '^ ' autosuggest-accept # Accepts the current suggestion.
 echo "Loaded $SHELL shell"
 
 #eval "$(ssh-agent -s)"
 ssh-add -l || true
+
+# autoload -U +X bashcompinit && bashcompinit
+# complete -o nospace -C /usr/local/Cellar/terraform/0.11.3/bin/terraform terraform

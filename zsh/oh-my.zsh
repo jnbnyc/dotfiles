@@ -2,7 +2,8 @@
 
 source $WORKSPACE_GITHUB/zsh-users/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-bindkey '^ ' autosuggest-accept # Accepts the current suggestion.
+# moved this to execute later in zshrc because it was getting clobbered by set-mark-command
+# bindkey '^ ' autosuggest-accept # Accepts the current suggestion.
 # bind '' autosuggest-execute # Accepts and executes the current suggestion.
 # bind '' autosuggest-clear # Clears the current suggestion.
 # bind '' autosuggest-fetch # Fetches a suggestion (works even when suggestions are disabled).
