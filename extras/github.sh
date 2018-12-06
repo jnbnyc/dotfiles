@@ -22,11 +22,11 @@ function github-clone {
     git clone https://github.com/$1.git $2;
 }
 
-# functions for jnbnyc-github
-function jnbnyc-clone { git clone https://github.com/jnbnyc/$1.git; }
+# functions for github.com/johnbuhay
+function buhay-clone { git clone https://github.com/johnbuhay/$1.git; }
 
-function jnbnyc-create {
-    curl -X POST -u jnbnyc \
+function buhay-create {
+    curl -X POST -u johnbuhay \
         -d "{\"name\": \"$1\" }" https://api.github.com/user/repos
 }
 

@@ -16,7 +16,7 @@ BUHAY_BIN=$HOME/bin
 [ -d "$GDRIVE" ] || mkdir -pv $GDRIVE
 
 cd $GDRIVE
-[ -d "$DOTFILES_DIR" ] || git clone https://github.com/jnbnyc/dotfiles.git
+[ -d "$DOTFILES_DIR" ] || git clone https://github.com/johnbuhay/dotfiles.git
 
 cd $TOOLS_DIR
 [ -d "$TOOLS_DIR/oh-my-zsh" ] || git clone https://github.com/robbyrussell/oh-my-zsh.git
@@ -53,7 +53,7 @@ BASECOMPLETIONS=""
 ## gnutools with toggle
 
 
-# if personal then ln -s ~/GoogleDrive/workspace/home/ssh/config_jnbnyc config
+# if personal then ln -s ~/GoogleDrive/workspace/home/ssh/config_johnbuhay config
 
 
 # ln -s ~/GoogleDrive/workspace/home/zshrc .zshrc

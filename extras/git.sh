@@ -5,12 +5,12 @@ function git-alias { git config --get-regexp alias; }
 
 # setup commit author
 function gitcfg {
-  if [[ "$1" == "jnbnyc" ]]; then
-    git config --local user.name jnbnyc
-    git config --local user.email jnbuhaynyc@gmail.com
+  git config --global user.name "John Buhay"
+  if [[ "$1" == "johnbuhay" ]]; then
+    # git config --local user.name johnbuhay
+    git config --local user.email "jnbuhaynyc@gmail.com"
   else
-    git config --local user.name "John Buhay" # wework
-    git config --local user.email "john.buhay@wework.com" # wework
+    git config --local user.email "john.buhay@wework.com"
   fi
 }
 

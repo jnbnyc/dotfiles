@@ -49,7 +49,7 @@ function cellar   { cd /usr/local/Cellar/$1; }  # brew
 function caskroom { cd /opt/homebrew-cask/Caskroom/$1; }  # brew cask
 function ws       { cd $WORKSPACE/$1; }
 function scm      { cd $WORKSPACE/github.com/$1; }
-function jnbnyc   { cd $WORKSPACE/github.com/jnbnyc/$1; }
+function buhay   { cd $WORKSPACE/github.com/johnbuhay/$1; }
 function gdrive   { cd $GDRIVE/$1; }
 function cs       { cd $CLOUDSTATION/$1 }
 

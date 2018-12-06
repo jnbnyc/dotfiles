@@ -9,7 +9,7 @@ export USRPATH=$HOME/bin
 export WORKSPACE=$HOME/workspace
 export WORKSPACE_GITHUB=$WORKSPACE/github.com
 
-export DOTFILES_DIR=$WORKSPACE_GITHUB/jnbnyc/dotfiles
+export DOTFILES_DIR=$WORKSPACE_GITHUB/johnbuhay/dotfiles
 
 export ZSH_DIR=$DOTFILES_DIR/zsh
 
